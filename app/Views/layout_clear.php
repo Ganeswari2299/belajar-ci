@@ -44,57 +44,14 @@ if(uri_string()!=""){
   ======================================================== -->
 </head>
 
-<body>
-
-  <?= $this->include('components/header') ?>
-
-  <?= $this->include('components/sidebar') ?>
-
-  <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Data Tables</h1>
-      <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">Home</li>
-            <?php
-	        if($hlm!="Home"){
-	        ?>
-	        <li class="breadcrumb-item"><?php echo $hlm?></li> 
-	        <?php
-	        }
-            ?> 
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
-
-          <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><?php echo $hlm?></h5>
-                <?= $this->renderSection('content') ?>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main><!-- End #main -->
-
-  <?= $this->include('components/footer') ?>
+<body> 
+	<main>
+	
+	  <?= $this->renderSection('content') ?> 
+	  
+	</main><!-- End #main -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
-
-  <!-- Select2 -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 
   <!-- Vendor JS Files -->
   <script src="<?= base_url()?>NiceAdmin/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -105,8 +62,6 @@ if(uri_string()!=""){
   <script src="<?= base_url()?>NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="<?= base_url()?>NiceAdmin/assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="<?= base_url()?>NiceAdmin/assets/vendor/php-email-form/validate.js"></script>
-
-  <?= $this->renderSection('script') ?> 
 
   <!-- Template Main JS File -->
   <script src="<?= base_url()?>NiceAdmin/assets/js/main.js"></script>
