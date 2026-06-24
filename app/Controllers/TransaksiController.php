@@ -102,10 +102,23 @@ class TransaksiController extends BaseController
 
     public function checkout()
     {
-        $data = [
-            'items' => $this->cart->contents(),
-            'total' => $this->cart->total()
-        ];
+            helper('diskon');
+            $items = $this->cart->contents();
+            $total_unit = 0;
+            foreach ($items as $item){
+                $total_unit += $item['qty'];
+            }
+            $subtotal = $this->cart->total();
+            $diskon = hitung_diskon($total_unit, $subtotal);
+            $grand_total = $subtotal - $diskon;
+
+            $data = [
+                'items' => $items,
+                'total' => $substotal,
+                'total_unit' => $total_unit,
+                'diskon' => $diskon,
+                'grand_total' => $grand_total
+            ];
 
         return view('v_checkout', $data);
     }
