@@ -17,7 +17,7 @@ class TransaksiController extends BaseController
 
     public function __construct()
     {
-        helper(['number', 'form']);
+        helper(['number', 'form', 'transaksi']);
         $this->cart = service('cart');
         $this->transactionModel = new TransactionModel();
         $this->transactionDetailModel = new TransactionDetailModel(); 
@@ -102,25 +102,24 @@ class TransaksiController extends BaseController
 
     public function checkout()
     {
-            helper('diskon');
+            helper('transaksi');
+            
             $items = $this->cart->contents();
-            $total_unit = 0;
-            foreach ($items as $item){
-                $total_unit += $item['qty'];
-            }
             $subtotal = $this->cart->total();
-            $diskon = hitung_diskon($total_unit, $subtotal);
-            $grand_total = $subtotal - $diskon;
+
+            $ppn = hitung_ppn($subtotal);
+            $biaya_admin = hitung_biaya_admin($subtotal);
 
             $data = [
                 'items' => $items,
-                'total' => $substotal,
-                'total_unit' => $total_unit,
-                'diskon' => $diskon,
-                'grand_total' => $grand_total
+                'total' => $subtotal,
+                'ppn' => $ppn,
+                'biaya_admin' => $biaya_admin,
+                'diskon_kupon' => 0,
+                'grand_total' => $subtotal + $ppn + $biaya_admin,
             ];
 
-        return view('v_checkout', $data);
+            return view('v_checkout', $data);
     }
 
     public function destinations()
@@ -193,13 +192,22 @@ class TransaksiController extends BaseController
         }
 
         $ongkir = (int) $this->request->getPost('ongkir');
+        $kupon_code = $this->request->getPost('kupon_code');
+        $diskon_kupon = hitung_diskon_kupon($subtotal, $kupon_code);
+        $ppn = hitung_ppn($subtotal);
+        $biaya_admin = hitung_biaya_admin($subtotal);
+        $grand_total = $subtotal - $diskon_kupon + $ppn + $biaya_admin + $ongkir;
 
         $transaction = [
-            'username'    => $this->request->getPost('username'),
-            'alamat'      => $this->request->getPost('alamat'),
-            'ongkir'      => $ongkir,
-            'total_harga' => $subtotal + $ongkir,
-            'status'      => 0, 
+            'username'       => $this->request->getPost('username'),
+            'alamat'         => $this->request->getPost('alamat'),
+            'ongkir'         => $ongkir,
+            'ppn'            => $ppn,
+            'biaya_admin'    => $biaya_admin,
+            'kupon_code'     => $kupon_code,
+            'diskon_kupon'   => $diskon_kupon,
+            'total_harga'    => $grand_total,
+            'status'         => 0,
         ];
 
         // insert transaction
